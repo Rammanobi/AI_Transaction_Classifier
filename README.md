@@ -155,171 +155,89 @@ The system calculates total user spend strictly excluding <code>FAILED</code> an
 
 <details open>
 <summary><b>Project Worktree</b></summary>
-<pre><code>|-- .dockerignore
-
-|-- .env
-
-|-- .gitignore
-
-|-- Dockerfile.api
-
-|-- Dockerfile.worker
-
-|-- README.md
-
-|-- alembic.ini
-
-|-- app
-
-|   |-- api
-
-|   |   \-- v1
-
-|   |       \-- jobs.py
-
-|   |-- core
-
-|   |   |-- config.py
-
-|   |   |-- database.py
-
-|   |   \-- logging.py
-
-|   |-- main.py
-
-|   |-- models
-
+<pre><code>
+|-- .dockerignore                            # Excludes files from Docker
+|-- .env                                     # Environment variables (DANGER: Excluded)
+|-- .gitignore                               # Untracked Git files
+|-- Dockerfile.api                           # Docker instructions for FastAPI
+|-- Dockerfile.worker                        # Docker instructions for Celery
+|-- README.md                                # Main documentation
+|-- alembic.ini                              # Database migration config
+|-- app                                      # Main application package
+|   |-- api                                  # API routing layer
+|   |   \-- v1                               # API version 1
+|   |       \-- jobs.py                      # Endpoints for job management
+|   |-- core                                 # Core configuration
+|   |   |-- config.py                        # Pydantic settings
+|   |   |-- database.py                      # SQLAlchemy setup
+|   |   \-- logging.py                       # JSON logging setup
+|   |-- main.py                              # FastAPI entrypoint
+|   |-- models                               # SQLAlchemy ORM models
 |   |   |-- __init__.py
-
-|   |   |-- base.py
-
-|   |   |-- job.py
-
-|   |   |-- job_summary.py
-
-|   |   |-- row_error.py
-
-|   |   \-- transaction.py
-
-|   |-- repositories
-
-|   |   |-- base.py
-
-|   |   |-- job_summaries.py
-
-|   |   |-- jobs.py
-
-|   |   |-- row_errors.py
-
-|   |   \-- transactions.py
-
-|   |-- schemas
-
-|   |   \-- job.py
-
-|   |-- services
-
-|   |   |-- anomaly_detection_service.py
-
-|   |   |-- cleaning_service.py
-
-|   |   |-- csv_parser_service.py
-
-|   |   |-- deduplication_service.py
-
-|   |   |-- llm
-
-|   |   |   |-- classification_service.py
-
-|   |   |   |-- llm_client.py
-
-|   |   |   |-- openai_client.py
-
-|   |   |   |-- prompt_builder.py
-
-|   |   |   |-- retry_handler.py
-
-|   |   |   \-- summary_service.py
-
-|   |   |-- storage
-
-|   |   |   \-- local_storage.py
-
-|   |   \-- validation_service.py
-
-|   \-- workers
-
-|       |-- celery_app.py
-
-|       \-- tasks
-
-|           \-- process.py
-
-|-- architecture.md
-
-|-- dataflow.md
-
-|-- docker-compose.yml
-
-|-- docs
-
-|   |-- adr
-
-|   |   |-- 001-use-postgresql.md
-
-|   |   |-- 002-use-celery.md
-
-|   |   |-- 003-use-llm-only-for-classification.md
-
-|   |   \-- 004-use-rowerror-table.md
-
-|   \-- demo_script.md
-
-|-- index.html
-
-|-- lifecycle.md
-
-|-- output_transactions.csv
-
-|-- requirements.txt
-
-|-- run_qa.py
-
-|-- run_real.py
-
-|-- sample_data
-
-|   |-- anomaly.csv
-
-|   |-- dirty.csv
-
-|   |-- duplicates.csv
-
-|   |-- missing_categories.csv
-
-|   \-- perfect.csv
-
-|-- system_architecture.md
-
-|-- tests
-
-|   |-- integration
-
-|   |   \-- test_full_pipeline.py
-
-|   \-- unit
-
-|       |-- test_anomaly_detection_service.py
-
-|       |-- test_cleaning_service.py
-
-|       \-- test_validation_service.py
-
-|-- transactions.csv
-
-|-- tree.py
-
-\-- tree.txt</code></pre>
+|   |   |-- base.py                          # Declarative base
+|   |   |-- job.py                           # Job tracking table
+|   |   |-- job_summary.py                   # Aggregated spend table
+|   |   |-- row_error.py                     # Failed transaction table
+|   |   \-- transaction.py                   # Cleaned transaction table
+|   |-- repositories                         # Database CRUD access
+|   |   |-- base.py                          # Declarative base
+|   |   |-- job_summaries.py                 # JobSummary queries
+|   |   |-- jobs.py                          # Endpoints for job management
+|   |   |-- row_errors.py                    # RowError queries
+|   |   \-- transactions.py                  # Transaction queries
+|   |-- schemas                              # Pydantic schemas
+|   |   \-- job.py                           # Job tracking table
+|   |-- services                             # Business logic layer
+|   |   |-- anomaly_detection_service.py     # Flags anomalies
+|   |   |-- cleaning_service.py              # Normalizes data
+|   |   |-- csv_parser_service.py            # Parses raw CSVs
+|   |   |-- deduplication_service.py         # Finds duplicates
+|   |   |-- llm                              # LLM integration layer
+|   |   |   |-- classification_service.py    # Manages LLM batching
+|   |   |   |-- llm_client.py                # Abstract LLM interface
+|   |   |   |-- openai_client.py             # OpenAI implementation
+|   |   |   |-- prompt_builder.py            # Constructs LLM prompts
+|   |   |   |-- retry_handler.py             # API backoff logic
+|   |   |   \-- summary_service.py           # Aggregates metrics
+|   |   |-- storage                          # File storage layer
+|   |   |   \-- local_storage.py             # Saves local CSVs
+|   |   \-- validation_service.py            # Validates fields
+|   \-- workers                              # Celery background workers
+|       |-- celery_app.py                    # Celery configuration
+|       \-- tasks                            # Celery tasks
+|           \-- process.py                   # Main pipeline task
+|-- architecture.md                          # Architecture notes
+|-- dataflow.md                              # Data flow notes
+|-- docker-compose.yml                       # Docker orchestration
+|-- docs                                     # Documentation folder
+|   |-- adr                                  # Architecture records
+|   |   |-- 001-use-postgresql.md            # ADR: Database
+|   |   |-- 002-use-celery.md                # ADR: Workers
+|   |   |-- 003-use-llm-only-for-classification.md # ADR: AI boundary
+|   |   \-- 004-use-rowerror-table.md        # ADR: Errors
+|   \-- demo_script.md                       # Video script
+|-- index.html                               # HTML dashboard
+|-- lifecycle.md                             # Lifecycle notes
+|-- output_transactions.csv                  # Final output dataset
+|-- requirements.txt                         # Python dependencies
+|-- run_qa.py                                # QA script
+|-- run_real.py                              # Execution script
+|-- sample_data                              # Test datasets
+|   |-- anomaly.csv                          # Test data
+|   |-- dirty.csv                            # Test data
+|   |-- duplicates.csv                       # Test data
+|   |-- missing_categories.csv               # Test data
+|   \-- perfect.csv                          # Test data
+|-- system_architecture.md                   # Architecture docs
+|-- tests                                    # Test suites
+|   |-- integration                          # Integration tests
+|   |   \-- test_full_pipeline.py            # End-to-end tests
+|   \-- unit                                 # Unit tests
+|       |-- test_anomaly_detection_service.py # Logic tests
+|       |-- test_cleaning_service.py         # Cleaning tests
+|       \-- test_validation_service.py       # Validation tests
+\-- transactions.csv                         # Input dataset
+</code></pre>
 </details>
 
 ### Directory Explanations
