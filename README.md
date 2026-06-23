@@ -64,9 +64,9 @@ graph TD
     
     subgraph API Container [API Container - FastAPI]
         API_Endpoints[API Endpoints]
-        UploadRoute[/jobs/upload]
-        StatusRoute[/jobs/{id}/status]
-        ResultsRoute[/jobs/{id}/results]
+        UploadRoute["/jobs/upload"]
+        StatusRoute["/jobs/{id}/status"]
+        ResultsRoute["/jobs/{id}/results"]
         API_Endpoints --- UploadRoute
         API_Endpoints --- StatusRoute
         API_Endpoints --- ResultsRoute
