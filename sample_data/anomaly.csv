@@ -1,0 +1,6 @@
+txn_id,date,merchant,amount,currency,status,account_id,category,notes
+1,2025-06-01,Ola,10.00,INR,SUCCESS,A1,Transport,Normal
+2,2025-06-02,Ola,12.00,INR,SUCCESS,A1,Transport,Normal
+3,2025-06-03,Ola,11.00,INR,SUCCESS,A1,Transport,Normal
+4,2025-06-04,Ola,1000.00,INR,SUCCESS,A1,Transport,Anomaly > 3x median
+5,2025-06-05,Swiggy,15.00,USD,SUCCESS,A2,Food,Anomaly domestic merchant USD

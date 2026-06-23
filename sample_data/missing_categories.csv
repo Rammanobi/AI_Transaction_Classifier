@@ -1,0 +1,5 @@
+txn_id,date,merchant,amount,currency,status,account_id,category,notes
+1,2025-06-01,Starbucks,5.50,USD,SUCCESS,A1,,
+2,2025-06-02,Apple Store,1200.00,USD,SUCCESS,A1,,
+3,2025-06-03,Delta Airlines,450.00,USD,SUCCESS,A2,,
+4,2025-06-04,Netflix,15.99,USD,SUCCESS,A2,,

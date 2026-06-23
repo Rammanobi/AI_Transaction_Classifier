@@ -1,0 +1,16 @@
+fastapi
+python-multipart
+uvicorn
+pydantic
+pydantic-settings
+sqlalchemy
+asyncpg
+alembic
+celery
+redis
+pandas
+openai
+tenacity
+python-json-logger
+pytest
+pytest-asyncio

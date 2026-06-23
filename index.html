@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Transaction Classifier | Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        code {
+            font-family: 'Fira Code', monospace;
+            background-color: #0f172a;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            color: #38bdf8;
+            font-size: 0.875em;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 sticky top-0 z-50 glass-panel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold gradient-text tracking-tight">AI Transaction Classifier</h1>
+                <a href="https://github.com/Rammanobi/AI_Transaction_Classifier" target="_blank" class="text-sm font-medium text-sky-400 hover:text-sky-300 transition-colors">View on GitHub &rarr;</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+
+        <!-- Hero Section -->
+        <section class="text-center space-y-6">
+            <h2 class="text-5xl font-extrabold text-white tracking-tight">Intelligent Financial Data Pipeline</h2>
+            <p class="text-xl text-slate-400 max-w-3xl mx-auto">An asynchronous, highly-scalable architecture that ingests, cleans, validates, and classifies transactions using OpenAI's LLMs.</p>
+        </section>
+
+        <!-- Architecture Panel -->
+        <section class="glass-panel rounded-2xl p-8 shadow-2xl">
+            <h3 class="text-2xl font-semibold mb-6 flex items-center text-white"><span class="bg-indigo-500/20 text-indigo-400 p-2 rounded-lg mr-3">🏗️</span> System Architecture</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="space-y-4 text-slate-300 leading-relaxed">
+                    <p>The system is built on a robust event-driven microservice architecture designed for maximum throughput and separation of concerns.</p>
+                    <ul class="space-y-3 mt-4">
+                        <li class="flex items-start"><strong class="text-white w-32 shrink-0">API Layer:</strong> FastAPI handles highly concurrent incoming HTTP connections instantly.</li>
+                        <li class="flex items-start"><strong class="text-white w-32 shrink-0">Message Broker:</strong> Redis intercepts workloads, ensuring the API is never blocked by heavy processing.</li>
+                        <li class="flex items-start"><strong class="text-white w-32 shrink-0">Worker Layer:</strong> Celery consumers process the heavy CSV parsing, data validation, and external LLM network calls asynchronously.</li>
+                        <li class="flex items-start"><strong class="text-white w-32 shrink-0">Database:</strong> PostgreSQL enforces strict relational integrity for the final audited financial data.</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 flex items-center justify-center">
+                    <div class="text-center space-y-4">
+                        <div class="flex justify-center space-x-4">
+                            <div class="bg-slate-700 p-3 rounded shadow">FastAPI</div>
+                            <div class="text-slate-400 mt-3">&rarr;</div>
+                            <div class="bg-red-900/50 text-red-300 p-3 rounded shadow">Redis</div>
+                            <div class="text-slate-400 mt-3">&rarr;</div>
+                            <div class="bg-green-900/50 text-green-300 p-3 rounded shadow">Celery</div>
+                        </div>
+                        <div class="flex justify-center space-x-4">
+                            <div class="bg-blue-900/50 text-blue-300 p-3 rounded shadow">PostgreSQL</div>
+                            <div class="text-slate-400 mt-3">&larr;</div>
+                            <div class="bg-slate-700 p-3 rounded shadow">Pipeline</div>
+                            <div class="text-slate-400 mt-3">&harr;</div>
+                            <div class="bg-purple-900/50 text-purple-300 p-3 rounded shadow">OpenAI API</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Flow -->
+        <section class="glass-panel rounded-2xl p-8 shadow-2xl">
+            <h3 class="text-2xl font-semibold mb-8 flex items-center text-white"><span class="bg-emerald-500/20 text-emerald-400 p-2 rounded-lg mr-3">🔄</span> The 6-Stage Data Flow</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-sky-500/50 transition-colors">
+                    <h4 class="text-lg font-bold text-sky-400 mb-2">1. Ingestion</h4>
+                    <p class="text-slate-400 text-sm">Users upload a CSV. FastAPI saves it to a shared volume, logs a <code>PENDING</code> job to Postgres, and queues a message in Redis.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-sky-500/50 transition-colors">
+                    <h4 class="text-lg font-bold text-sky-400 mb-2">2. Parsing & Cleaning</h4>
+                    <p class="text-slate-400 text-sm">Celery safely reads the file using Pandas, managing <code>None</code> types cleanly. Dates, strings, and currencies are stripped and normalized.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-sky-500/50 transition-colors">
+                    <h4 class="text-lg font-bold text-sky-400 mb-2">3. Strict Validation</h4>
+                    <p class="text-slate-400 text-sm">Required fields and duplicate IDs are strictly checked. Failures are instantly shunted to an error log so clean data can proceed.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-sky-500/50 transition-colors">
+                    <h4 class="text-lg font-bold text-sky-400 mb-2">4. LLM Classification</h4>
+                    <p class="text-slate-400 text-sm">Valid rows missing categories are batched to OpenAI. A strict JSON schema prompt guarantees exactly one category prediction per row.</p>
+                </div>
+                <!-- Card 5 -->
+                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-sky-500/50 transition-colors">
+                    <h4 class="text-lg font-bold text-sky-400 mb-2">5. Anomaly Detection</h4>
+                    <p class="text-slate-400 text-sm">Transactions are flagged if they exceed 3x the account's median spend or if domestic merchants unexpectedly charge in USD.</p>
+                </div>
+                <!-- Card 6 -->
+                <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-sky-500/50 transition-colors">
+                    <h4 class="text-lg font-bold text-sky-400 mb-2">6. Aggregation</h4>
+                    <p class="text-slate-400 text-sm">Total spends are calculated securely—strictly omitting <code>FAILED</code> or <code>PENDING</code> transactions. Data is finally committed to PostgreSQL.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Setup & cURL Instructions -->
+        <section class="glass-panel rounded-2xl p-8 shadow-2xl">
+            <h3 class="text-2xl font-semibold mb-6 flex items-center text-white"><span class="bg-amber-500/20 text-amber-400 p-2 rounded-lg mr-3">⚡</span> Setup & Quick Start</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Setup -->
+                <div class="space-y-4">
+                    <h4 class="text-lg font-medium text-slate-200">1. Environment</h4>
+                    <p class="text-slate-400 text-sm">Create a <code>.env</code> file in the project root with your OpenAI API Key:</p>
+                    <pre class="bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm text-green-400"><code>OPENAI_API_KEY=your_actual_api_key_here</code></pre>
+
+                    <h4 class="text-lg font-medium text-slate-200 mt-6">2. Booting up Docker</h4>
+                    <p class="text-slate-400 text-sm">Bring up Postgres, Redis, FastAPI, and Celery instantly:</p>
+                    <pre class="bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm text-green-400"><code>docker compose up -d --build</code></pre>
+                </div>
+
+                <!-- Curl -->
+                <div class="space-y-4 border-l border-slate-700 pl-8">
+                    <h4 class="text-lg font-medium text-slate-200">API Testing via cURL</h4>
+                    
+                    <div class="space-y-2">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Upload CSV</p>
+                        <pre class="bg-slate-950 p-3 rounded-lg overflow-x-auto text-xs text-sky-300"><code>curl -X POST "http://localhost:8000/jobs/upload" \
+  -H "accept: application/json" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@transactions.csv"</code></pre>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-4">Fetch Results</p>
+                        <pre class="bg-slate-950 p-3 rounded-lg overflow-x-auto text-xs text-sky-300"><code>curl -X GET "http://localhost:8000/jobs/{job_id}/results" \
+  -H "accept: application/json"</code></pre>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-900 mt-12">
+        <div class="max-w-7xl mx-auto px-4 py-8 text-center text-slate-500 text-sm">
+            Developed for robust AI-driven financial transaction classification.
+        </div>
+    </footer>
+
+</body>
+</html>

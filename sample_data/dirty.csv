@@ -1,0 +1,5 @@
+txn_id,date,merchant,amount,currency,status,account_id,category,notes
+1,2025-06-01,Swiggy,$15.50,inr,success,A1,,Missing category and dirty amount
+2,32-99-2025,BadDate,100,INR,SUCCESS,A1,,Will fail cleaning
+3,2025-06-03,,20.00,INR,SUCCESS,A2,,Missing merchant
+,2025-06-04,NoTxnId,10.00,INR,SUCCESS,A2,,Missing txn_id

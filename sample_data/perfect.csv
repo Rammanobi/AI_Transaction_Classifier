@@ -1,0 +1,4 @@
+txn_id,date,merchant,amount,currency,status,account_id,category,notes
+1,2025-06-01,Swiggy,15.50,INR,SUCCESS,A1,Food,Lunch
+2,2025-06-02,Amazon,150.00,INR,SUCCESS,A1,Shopping,Shoes
+3,2025-06-03,Uber,20.00,INR,SUCCESS,A2,Transport,Ride home

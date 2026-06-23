@@ -1,0 +1,4 @@
+txn_id,date,merchant,amount,currency,status,account_id,category,notes
+1,2025-06-01,Swiggy,15.50,INR,SUCCESS,A1,Food,Lunch
+1,2025-06-01,swiggy,$15.50,inr,success,A1,Food,Lunch duplicate with diff casing
+2,2025-06-02,Amazon,150.00,INR,SUCCESS,A1,Shopping,Shoes
