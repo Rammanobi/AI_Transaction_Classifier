@@ -72,23 +72,23 @@ graph TB
         n1(["Client / cURL"]):::client
     end
 
-    subgraph API [API Layer (FastAPI)]
+    subgraph API [API Layer - FastAPI]
         n2["POST /jobs/upload"]:::api
         n3{"Validate CSV file"}:::decision
         n4[("Create Job row, status=PENDING")]:::data
         n5["Save file to shared volume"]:::api
         n6[("Enqueue process_csv_task")]:::data
         n7(["Return job_id to client"]):::client
-        n23["GET /jobs/{id}/status"]:::api
-        n24["GET /jobs/{id}/results"]:::api
+        n23["GET /jobs/id/status"]:::api
+        n24["GET /jobs/id/results"]:::api
     end
 
-    subgraph Worker [Worker Pipeline (Celery)]
+    subgraph Worker [Worker Pipeline - Celery]
         n8["Celery worker dequeues task"]:::worker
         n9[("Set status=PROCESSING")]:::data
         n10["Parse CSV with pandas"]:::worker
         n11["Clean dates, currency, casing, fill category"]:::worker
-        n12{"Validate required fields + dupes"}:::decision
+        n12{"Validate required fields and dupes"}:::decision
         n13[("Write to row_errors table")]:::data
         n14["Anomaly detection: 3x median, currency mismatch"]:::worker
         n15{"Missing category?"}:::decision
@@ -107,7 +107,7 @@ graph TB
     end
 
     subgraph External [External LLM]
-        n27[("LLM API OpenAI/Gemini")]:::llm
+        n27[("LLM API OpenAI / Gemini")]:::llm
     end
 
     %% Connections
