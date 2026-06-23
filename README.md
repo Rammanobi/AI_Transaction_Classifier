@@ -149,6 +149,112 @@ The system calculates total user spend strictly excluding <code>FAILED</code> an
 
 ---
 
+
+
+## 📁 Folder Structure
+
+<details open>
+<summary><b>Project Worktree</b></summary>
+<pre><code>|-- .dockerignore
+|-- .env
+|-- .gitignore
+|-- Dockerfile.api
+|-- Dockerfile.worker
+|-- README.md
+|-- alembic.ini
+|-- app
+|   |-- api
+|   |   \-- v1
+|   |       \-- jobs.py
+|   |-- core
+|   |   |-- config.py
+|   |   |-- database.py
+|   |   \-- logging.py
+|   |-- main.py
+|   |-- models
+|   |   |-- __init__.py
+|   |   |-- base.py
+|   |   |-- job.py
+|   |   |-- job_summary.py
+|   |   |-- row_error.py
+|   |   \-- transaction.py
+|   |-- repositories
+|   |   |-- base.py
+|   |   |-- job_summaries.py
+|   |   |-- jobs.py
+|   |   |-- row_errors.py
+|   |   \-- transactions.py
+|   |-- schemas
+|   |   \-- job.py
+|   |-- services
+|   |   |-- anomaly_detection_service.py
+|   |   |-- cleaning_service.py
+|   |   |-- csv_parser_service.py
+|   |   |-- deduplication_service.py
+|   |   |-- llm
+|   |   |   |-- classification_service.py
+|   |   |   |-- llm_client.py
+|   |   |   |-- openai_client.py
+|   |   |   |-- prompt_builder.py
+|   |   |   |-- retry_handler.py
+|   |   |   \-- summary_service.py
+|   |   |-- storage
+|   |   |   \-- local_storage.py
+|   |   \-- validation_service.py
+|   \-- workers
+|       |-- celery_app.py
+|       \-- tasks
+|           \-- process.py
+|-- architecture.md
+|-- dataflow.md
+|-- docker-compose.yml
+|-- docs
+|   |-- adr
+|   |   |-- 001-use-postgresql.md
+|   |   |-- 002-use-celery.md
+|   |   |-- 003-use-llm-only-for-classification.md
+|   |   \-- 004-use-rowerror-table.md
+|   \-- demo_script.md
+|-- index.html
+|-- lifecycle.md
+|-- output_transactions.csv
+|-- requirements.txt
+|-- run_qa.py
+|-- run_real.py
+|-- sample_data
+|   |-- anomaly.csv
+|   |-- dirty.csv
+|   |-- duplicates.csv
+|   |-- missing_categories.csv
+|   \-- perfect.csv
+|-- system_architecture.md
+|-- tests
+|   |-- integration
+|   |   \-- test_full_pipeline.py
+|   \-- unit
+|       |-- test_anomaly_detection_service.py
+|       |-- test_cleaning_service.py
+|       \-- test_validation_service.py
+|-- transactions.csv
+|-- tree.py
+\-- tree.txt</code></pre>
+</details>
+
+### Directory Explanations
+<table>
+<tr><th>Directory</th><th>Purpose</th></tr>
+<tr><td><code>app/api/</code></td><td>FastAPI HTTP endpoint definitions and routing.</td></tr>
+<tr><td><code>app/core/</code></td><td>System configuration, logging setup, and SQLAlchemy session management.</td></tr>
+<tr><td><code>app/models/</code></td><td>PostgreSQL database schema definitions (SQLAlchemy ORM).</td></tr>
+<tr><td><code>app/repositories/</code></td><td>Database interaction logic (CRUD operations) separating DB logic from business logic.</td></tr>
+<tr><td><code>app/schemas/</code></td><td>Pydantic models for strict API request/response validation.</td></tr>
+<tr><td><code>app/services/</code></td><td>Core business logic including CSV Parsing, Data Cleaning, Validation, and OpenAI interactions.</td></tr>
+<tr><td><code>app/workers/</code></td><td>Celery configuration and asynchronous background task definitions.</td></tr>
+<tr><td><code>docs/</code></td><td>Architecture Decision Records (ADRs) and planning documents.</td></tr>
+<tr><td><code>sample_data/</code></td><td>Example CSV files used for testing various pipeline failure states.</td></tr>
+<tr><td><code>tests/</code></td><td>Pytest suites covering both unit logic and full integration flows.</td></tr>
+</table>
+
 ## ⚡ Quick Start
 
 ### 1. Configure Environment
