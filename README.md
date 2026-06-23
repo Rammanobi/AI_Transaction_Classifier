@@ -59,46 +59,99 @@ The system is built on a high-throughput, event-driven microservice architecture
 <h3>Architecture Diagram</h3>
 
 ```mermaid
-graph TD
-    Client[Client / cURL]
-    
-    subgraph API Container [API Container - FastAPI]
-        API_Endpoints[API Endpoints]
-        UploadRoute["/jobs/upload"]
-        StatusRoute["/jobs/{id}/status"]
-        ResultsRoute["/jobs/{id}/results"]
-        API_Endpoints --- UploadRoute
-        API_Endpoints --- StatusRoute
-        API_Endpoints --- ResultsRoute
+graph TB
+    %% Styling
+    classDef client fill:#adf0c7,stroke:#087429,stroke-width:2px,color:#222428;
+    classDef api fill:#c6dcff,stroke:#305bab,stroke-width:2px,color:#222428;
+    classDef worker fill:#fff6b6,stroke:#af7e02,stroke-width:2px,color:#222428;
+    classDef decision fill:#ffd8f4,stroke:#af3fb9,stroke-width:2px,color:#222428;
+    classDef llm fill:#f8d3af,stroke:#9b4a07,stroke-width:2px,color:#222428;
+    classDef data fill:#ccf4ff,stroke:#108ab3,stroke-width:2px,color:#222428;
+
+    subgraph Client [Client]
+        n1(["Client / cURL"]):::client
     end
 
-    Redis[(Redis Message Broker)]
-
-    subgraph Worker Container [Worker Container - Celery]
-        TaskQueue[Celery Task Queue]
-        Pipeline[process_csv_task]
-        
-        CSVParser[CSV Parser Service]
-        Cleaner[Cleaning Service]
-        Validator[Validation Service]
-        Classifier[Classification Service]
-        Anomaly[Anomaly Detection Service]
-        Summarizer[Summary Service]
-        
-        Pipeline --> CSVParser --> Cleaner --> Validator --> Classifier --> Anomaly --> Summarizer
+    subgraph API [API Layer (FastAPI)]
+        n2["POST /jobs/upload"]:::api
+        n3{"Validate CSV file"}:::decision
+        n4[("Create Job row, status=PENDING")]:::data
+        n5["Save file to shared volume"]:::api
+        n6[("Enqueue process_csv_task")]:::data
+        n7(["Return job_id to client"]):::client
+        n23["GET /jobs/{id}/status"]:::api
+        n24["GET /jobs/{id}/results"]:::api
     end
 
-    Postgres[(PostgreSQL Database)]
-    OpenAI[OpenAI LLM API]
+    subgraph Worker [Worker Pipeline (Celery)]
+        n8["Celery worker dequeues task"]:::worker
+        n9[("Set status=PROCESSING")]:::data
+        n10["Parse CSV with pandas"]:::worker
+        n11["Clean dates, currency, casing, fill category"]:::worker
+        n12{"Validate required fields + dupes"}:::decision
+        n13[("Write to row_errors table")]:::data
+        n14["Anomaly detection: 3x median, currency mismatch"]:::worker
+        n15{"Missing category?"}:::decision
+        n16["Batch LLM classification call"]:::llm
+        n17["Merge categories into rows"]:::worker
+        n18[("Save Transaction rows")]:::data
+        n19["Aggregate spend by currency/merchant"]:::worker
+        n20["LLM narrative summary call"]:::llm
+        n21[("Save JobSummary")]:::data
+        n22[("Set status=COMPLETED")]:::data
+    end
 
-    Client -- "Upload CSV" --> UploadRoute
-    UploadRoute -- "Create Job, Publish Task" --> Redis
-    UploadRoute -- "Save State" --> Postgres
+    subgraph Stores [Data Stores]
+        n25[("PostgreSQL")]:::data
+        n26[("Redis")]:::data
+    end
+
+    subgraph External [External LLM]
+        n27[("LLM API OpenAI/Gemini")]:::llm
+    end
+
+    %% Connections
+    n1 -- "Upload CSV" --> n2
+    n2 --> n3
+    n3 -- "OK" --> n4
+    n3 -- "Fail" --> n7
+    n4 --> n5
+    n5 --> n6
+    n6 --> n7
+    n6 -- "Consume" --> n8
+    n8 --> n9
+    n9 --> n10
+    n10 --> n11
+    n11 --> n12
+    n12 -- "Invalid rows" --> n13
+    n12 -- "Valid rows" --> n14
+    n14 --> n15
+    n15 -- "YES" --> n16
+    n16 --> n17
+    n15 -- "NO" --> n17
+    n17 --> n18
+    n18 --> n19
+    n19 --> n20
+    n20 --> n21
+    n21 --> n22
     
-    Redis -- "Consume Task" --> TaskQueue
-    TaskQueue --> Pipeline
-    Classifier -- "Batch Prompting" --> OpenAI
-    Pipeline -- "Insert Final Data" --> Postgres
+    n1 -- "Poll status" --> n23
+    n1 -- "Fetch results" --> n24
+    
+    n4 -- "Insert" --> n25
+    n9 -- "Update" --> n25
+    n13 -- "Insert" --> n25
+    n18 -- "Insert" --> n25
+    n21 -- "Insert" --> n25
+    n22 -- "Update" --> n25
+    n23 -- "Read" --> n25
+    n24 -- "Read" --> n25
+    
+    n6 -- "Push" --> n26
+    n8 -- "Pop" --> n26
+    
+    n16 -- "Call" --> n27
+    n20 -- "Call" --> n27
 ```
 
 ---
